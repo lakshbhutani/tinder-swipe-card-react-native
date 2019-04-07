@@ -119847,21 +119847,23 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
 
   var _extends2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[2], "@babel/runtime/helpers/extends"));
 
-  var _classCallCheck2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[3], "@babel/runtime/helpers/classCallCheck"));
+  var _objectSpread2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[3], "@babel/runtime/helpers/objectSpread"));
 
-  var _createClass2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[4], "@babel/runtime/helpers/createClass"));
+  var _classCallCheck2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[4], "@babel/runtime/helpers/classCallCheck"));
 
-  var _possibleConstructorReturn2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[5], "@babel/runtime/helpers/possibleConstructorReturn"));
+  var _createClass2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[5], "@babel/runtime/helpers/createClass"));
 
-  var _getPrototypeOf2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[6], "@babel/runtime/helpers/getPrototypeOf"));
+  var _possibleConstructorReturn2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[6], "@babel/runtime/helpers/possibleConstructorReturn"));
 
-  var _inherits2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[7], "@babel/runtime/helpers/inherits"));
+  var _getPrototypeOf2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[7], "@babel/runtime/helpers/getPrototypeOf"));
 
-  var _react = _interopRequireWildcard(_$$_REQUIRE(_dependencyMap[8], "react"));
+  var _inherits2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[8], "@babel/runtime/helpers/inherits"));
 
-  var _index = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[9], "./../node_modules/react-transform-hmr/lib/index.js"));
+  var _react = _interopRequireWildcard(_$$_REQUIRE(_dependencyMap[9], "react"));
 
-  var _reactNative = _$$_REQUIRE(_dependencyMap[10], "react-native");
+  var _index = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[10], "./../node_modules/react-transform-hmr/lib/index.js"));
+
+  var _reactNative = _$$_REQUIRE(_dependencyMap[11], "react-native");
 
   var _temp,
       _jsxFileName = "/home/laksh/Desktop/react_native_animations/src/Deck.js";
@@ -119885,6 +119887,8 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
     };
   }
 
+  var SCREEN_WIDTH = _reactNative.Dimensions.get('screen').width;
+
   var Deck = _wrapComponent("Deck")((_temp = function (_Component) {
     (0, _inherits2.default)(Deck, _Component);
 
@@ -119894,43 +119898,79 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
       (0, _classCallCheck2.default)(this, Deck);
       _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Deck).call(this, props));
 
+      _this.getLayout = function () {
+        var position = _this.state.position;
+        var rotate = position.x.interpolate({
+          inputRange: [-'300', '0', '300'],
+          outputRange: [-'120', '0', '120']
+        });
+        return (0, _objectSpread2.default)({}, position.getLayout(), {
+          transform: [{
+            rotate: rotate
+          }]
+        });
+      };
+
       _this.renderCards = function () {
         var _this$props = _this.props,
             data = _this$props.data,
             renderCard = _this$props.renderCard;
-        var myData = data.map(function (item) {
+        var _this$state = _this.state,
+            panResponder = _this$state.panResponder,
+            position = _this$state.position;
+        var myData = data.map(function (item, index) {
+          if (index === 0) {
+            return _react.default.createElement(_reactNative.Animated.View, (0, _extends2.default)({
+              key: item.id,
+              style: _this.getLayout()
+            }, panResponder.panHandlers, {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 44
+              }
+            }), renderCard(item));
+          }
+
           return renderCard(item);
         });
         console.log(myData);
         return myData;
       };
 
-      var panResponder = _reactNative.PanResponder.create({
+      var _position = new _reactNative.Animated.ValueXY();
+
+      var _panResponder = _reactNative.PanResponder.create({
         onStartShouldSetPanResponder: function onStartShouldSetPanResponder() {
           return true;
         },
         onPanResponderMove: function onPanResponderMove(event, gesture) {
+          _position.setValue({
+            x: gesture.dx,
+            y: gesture.dy
+          });
+
           console.log("event " + event, "gesture " + gesture);
         },
         onPanResponderRelease: function onPanResponderRelease() {}
       });
 
       _this.state = {
-        panResponder: panResponder
+        panResponder: _panResponder,
+        position: _position
       };
+      console.log(_this.state);
       return _this;
     }
 
     (0, _createClass2.default)(Deck, [{
       key: "render",
       value: function render() {
-        var panResponder = this.state.panResponder;
-        return _react.default.createElement(_reactNative.View, (0, _extends2.default)({}, panResponder.panHandlers, {
+        return _react.default.createElement(_reactNative.View, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 29
+            lineNumber: 62
           }
-        }), this.renderCards());
+        }, this.renderCards());
       }
     }]);
     return Deck;
@@ -119946,7 +119986,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
       alignItems: 'center'
     }
   });
-},710,[1,571,11,22,23,30,33,36,49,199,2],"src/Deck.js");
+},710,[1,571,11,46,22,23,30,33,36,49,199,2],"src/Deck.js");
 __d(function(global, require, _aUnused, _bUnused, module, exports, _cUnused) {
   module.exports = {
   "name": "react_native_animations",
